@@ -3,21 +3,27 @@
 
 int main()
 {
-    char str[1000];
     FILE *fptr;
-    char fname[20]="test.txt";
-    printf("\n\n Create a file (test.txt) and input text:\n");
-    printf("-----------------------------------------\n");
-    fptr=fopen(fname,"w");
+    char fname[20];
+    char str;
+    printf("\n\n Read an existing file :\n");
+    printf("---------------------------------\n");
+    printf(" Input the filename to be opened : ");
+    scanf("%s", fname);
+    fptr=fopen(fname,"r");
     if(fptr==NULL)
     {
-        printf(" Error in opening file!");
-        exit(1);
+        printf(" File does not exist or cannot be opened.\n");
+        exit(0);
     }
-    printf(" Input a sentence for the file: ");
-    fgets(str, sizeof str, stdin);
-    fprintf(fptr, "%s", str);
+    printf("\n The content of the file %s is : \n", fname);
+    str = fgetc(fptr);
+    while(str != EOF)
+    {
+        printf("%c", str);
+        str = fgetc(fptr);
+    }
     fclose(fptr);
-    printf("\n The file %s created successfully...!!\n\n", fname);
-    return 0;
+    printf("\n\n");
+
 }
