@@ -4,26 +4,32 @@
 int main()
 {
     FILE *fptr;
-    char fname[20];
-    char str;
-    printf("\n\n Read an existing file :\n");
+    int i, n;
+    char fname[20]="test.txt";
+    char str[100];
+    char str1;
+    printf("\n\n Write multiple lines in a text file and read the file :\n");
     printf("---------------------------------\n");
-    printf(" Input the filename to be opened : ");
-    scanf("%s", fname);
-    fptr=fopen(fname,"r");
-    if(fptr==NULL)
+    printf(" Input the number of lines to be written : ");
+    scanf("%d", &n);
+    printf("\n :: The lines are ::\n");
+    fptr=fopen(fname,"w");
+    for(i=0;i<n+1;i++)
     {
-        printf(" File does not exist or cannot be opened.\n");
-        exit(0);
-    }
-    printf("\n The content of the file %s is : \n", fname);
-    str = fgetc(fptr);
-    while(str != EOF)
-    {
-        printf("%c", str);
-        str = fgetc(fptr);
+        fgets(str, sizeof str, stdin);
+                fputs(str, fptr);
     }
     fclose(fptr);
-    printf("\n\n");
 
+    fptr = fopen(fname, "r");
+    printf("\n The content of the file %s is :\n", fname);
+    str1 = fgetc(fptr);
+    while(str1 != EOF)
+    {
+        printf("%c", str1);
+        str1 = fgetc(fptr);
+    }
+    printf("\n\n");
+    fclose(fptr);
+    return 0;
 }
