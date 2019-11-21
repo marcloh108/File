@@ -1,35 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX 256
+
 int main()
 {
-    FILE *fptr;
-    int i, n;
-    char fname[20]="test.txt";
-    char str[100];
-    char str1;
-    printf("\n\n Write multiple lines in a text file and read the file :\n");
-    printf("---------------------------------\n");
-    printf(" Input the number of lines to be written : ");
-    scanf("%d", &n);
-    printf("\n :: The lines are ::\n");
-    fptr=fopen(fname,"w");
-    for(i=0;i<n+1;i++)
+    int lno, ctr = 0;
+    char ch;
+    FILE *fptr1, *fptr2;
+    char fname[MAX];
+    char str[MAX], temp[] = "temp.txt";
+    printf("\n\n Delete a specific line from a file :\n");
+    printf("-----------------------------------------\n");
+    printf(" Input the file name to be opened : ");
+    scanf("%s", fname);
+    fptr1=fopen(fname,"r");
+    if(!fptr1)
     {
-        fgets(str, sizeof str, stdin);
-                fputs(str, fptr);
+        printf(" File not found or unable to open the input file!!\n");
+        return 0;
     }
-    fclose(fptr);
+    fptr2 = fopen(temp, "w");
+    if(!fptr2)
+    {
+        printf("Unable to open a temporary file to write!!\n");
+        fclose(fptr1);
+        return 0;
+    }
+    printf(" Input the line you want to remove : ");
+    scanf("%d", &lno);
+    lno++;
 
-    fptr = fopen(fname, "r");
-    printf("\n The content of the file %s is :\n", fname);
-    str1 = fgetc(fptr);
-    while(str1 != EOF)
+    while(!feof(fptr1))
     {
-        printf("%c", str1);
-        str1 = fgetc(fptr);
+        strcpy(str, "\0");
+        fgets(str, MAX, fptr1);
+        if(!feof(fptr1))
+        {
+            ctr++;
+            if(ctr!=lno)
+            {
+                fprintf(fptr2,"%s", str);
+            }
+        }
     }
-    printf("\n\n");
-    fclose(fptr);
+    fclose(fptr1);
+    fclose(fptr2);
+    remove(fname);
+    rename(temp, fname);
+
+    fptr1=fopen(fname, "r");
+    ch = fgetc(fptr1);
+    printf(" Now the content of the file %s is : \n", fname);
+    while(ch!=EOF)
+    {
+        printf("%c", ch);
+        ch=fgetc(fptr1);
+    }
+    fclose(fptr1);
     return 0;
 }
